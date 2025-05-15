@@ -17,7 +17,7 @@ import org.h2.util.TimeZoneProvider;
 import org.h2.value.ValueLob;
 
 /**
- * A local or remote session. A session represents a database connection.
+ * 一次连接会话的上下文
  */
 public abstract class Session implements CastDataProvider, AutoCloseable {
 

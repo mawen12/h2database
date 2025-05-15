@@ -250,14 +250,14 @@ public class JdbcStatement extends TraceObject implements Statement {
         try {
             setExecutingStatement(command);
             try {
-                if (command.isQuery()) {
+                if (command.isQuery()) { // SELECT / SHOW DATABASES /
                     returnsResultSet = true;
                     boolean scrollable = resultSetType != ResultSet.TYPE_FORWARD_ONLY;
                     boolean updatable = resultSetConcurrency == ResultSet.CONCUR_UPDATABLE;
                     ResultInterface result = command.executeQuery(maxRows, fetchSize, scrollable);
                     lazy = result.isLazy();
                     resultSet = new JdbcResultSet(conn, this, command, result, id, scrollable, updatable, false);
-                } else {
+                } else { // CREATE TABLE / UPDATE / DELETE / INSERT INTO
                     returnsResultSet = false;
                     ResultWithGeneratedKeys result = command.executeUpdate(generatedKeysRequest);
                     updateCount = result.getUpdateCount();

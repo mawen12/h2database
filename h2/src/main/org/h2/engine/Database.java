@@ -87,7 +87,7 @@ import org.h2.value.ValueInteger;
 import org.h2.value.ValueTimestampTimeZone;
 
 /**
- * There is one database object per open database.
+ * 每个已打开的数据库对应对象实例
  * <p>
  * The format of the metadata table is:
  *  id int, 0, objectType int, sql varchar

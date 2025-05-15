@@ -26,11 +26,15 @@ import org.h2.result.ResultWithGeneratedKeys;
 import org.h2.result.ResultWithPaddedStrings;
 import org.h2.util.Utils;
 import org.h2.value.Value;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Represents a SQL statement. This object is only used on the server side.
  */
 public abstract class Command implements CommandInterface {
+
+    protected Logger log = LoggerFactory.getLogger(Command.class);
 
     /**
      * The session.

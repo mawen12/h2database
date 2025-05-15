@@ -479,8 +479,14 @@ public abstract class Token implements Cloneable {
 
     }
 
+    /**
+     * 代表关键词的Token
+     */
     static final class KeywordToken extends Token {
 
+        /**
+         * 对应数组TOKENS的index
+         */
         private final int type;
 
         KeywordToken(int start, int type) {

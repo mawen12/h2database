@@ -28,7 +28,7 @@ import org.h2.util.TimeZoneProvider;
 import org.h2.util.Utils;
 
 /**
- * Encapsulates the connection settings, including user name and password.
+ * 封装连接配置，包含用户名和密码。
  */
 public class ConnectionInfo implements Cloneable {
 
@@ -71,7 +71,7 @@ public class ConnectionInfo implements Cloneable {
     }
 
     /**
-     * Create a connection info object.
+     * 数据库连接信息解析
      *
      * @param u the database URL (must start with jdbc:h2:)
      * @param info the connection properties or {@code null}

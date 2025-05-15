@@ -441,7 +441,7 @@ public final class Tokenizer {
             case 'r':
                 i = readR(sql, end, i, tokens);
                 continue loop;
-            case 'S':
+            case 'S': // 代表 SELECT
             case 's':
                 i = readS(sql, end, i, tokens);
                 continue loop;
@@ -1010,6 +1010,22 @@ public final class Tokenizer {
         return endIndex;
     }
 
+    /**
+     * 检查字符串s的区间[start, length)是否与expected的[1, length)相等，该相等时忽略大小写的。
+     *
+     * <p>0xffdf转换为二进制为 1111_1111_1101_1111，使用 & 会清除字符二进制编码中从右数第6位。
+     * 而在 ASCII 中，小写字母的二进制为:
+     * 'a'  97  0110_0001 &0xffdf -> 'A'
+     * 因此通过与 0xFFDF 的AND操作，强行变为大小写不敏感的比较。
+     *
+     * <p>由于从expected的索引1开始比较，因此首个字母会忽略
+     *
+     * @param expected
+     * @param s
+     * @param start
+     * @param length
+     * @return
+     */
     private static boolean eq(String expected, String s, int start, int length) {
         if (length != expected.length()) {
             return false;

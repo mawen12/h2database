@@ -17,16 +17,13 @@ import org.h2.jdbc.JdbcConnection;
 import org.h2.message.DbException;
 
 /**
- * The database driver. An application should not use this class directly. The
- * only thing the application needs to do is load the driver. This can be done
- * using Class.forName. To load the driver and open a database connection, use
- * the following code:
+ * H2 数据库驱动，应用应该通过如下方式来使用该类。
+ * 通过Class.forName，以类名来加载驱动，并打开数据库连接。
  *
- * <pre>
- * Class.forName(&quot;org.h2.Driver&quot;);
- * Connection conn = DriverManager.getConnection(
- *      &quot;jdbc:h2:&tilde;/test&quot;, &quot;sa&quot;, &quot;sa&quot;);
- * </pre>
+ * <pre>{@code
+ *  Class.forName("org.h2.Driver");
+ *  Connection conn = DriverManager.getConnection("jdbc:h2:~/test", "sa", "sa");
+ * }</pre>
  */
 public class Driver implements java.sql.Driver {
 
@@ -42,9 +39,7 @@ public class Driver implements java.sql.Driver {
     }
 
     /**
-     * Open a database connection.
-     * This method should not be called by an application.
-     * Instead, the method DriverManager.getConnection should be used.
+     * 打开数据库连接，应用不能直接调用该方法，而是通过 DriverManager#getConnection 来获取
      *
      * @param url the database URL
      * @param info the connection properties
