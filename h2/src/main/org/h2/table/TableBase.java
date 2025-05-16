@@ -16,7 +16,7 @@ import org.h2.util.StringUtils;
 import org.h2.value.Value;
 
 /**
- * The base class of a regular table, or a user defined table.
+ * 用于常规表或用户定义表的基类
  *
  * @author Thomas Mueller
  * @author Sergi Vladykin
@@ -24,7 +24,7 @@ import org.h2.value.Value;
 public abstract class TableBase extends Table {
 
     /**
-     * The table engine used (null for regular tables).
+     * 使用的表引擎（默认为常规表）
      */
     private final String tableEngine;
     /** Provided table parameters */

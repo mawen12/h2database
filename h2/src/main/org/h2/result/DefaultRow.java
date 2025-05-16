@@ -6,24 +6,29 @@
 package org.h2.result;
 
 import org.h2.engine.Constants;
+import org.h2.table.Column;
 import org.h2.value.Value;
 import org.h2.value.ValueBigint;
 
 /**
- * The default implementation of a row in a table.
+ * 代表一个表的一条记录的默认实现
  */
 public class DefaultRow extends Row {
 
     /**
-     * The constant that means "memory usage is unknown and needs to be calculated first".
+     * 该常量代表"内存使用未知，需要被首先计算"
      */
     public static final int MEMORY_CALCULATE = -1;
 
     /**
-     * The values of the row (one entry per column).
+     * 一行数据的所有值（每一列一个实体）
+     * 其索引和{@link Column#getColumnId()}一一对应
      */
     protected final Value[] data;
 
+    /**
+     * 实际占用内存
+     */
     private int memory;
 
     DefaultRow(int columnCount) {

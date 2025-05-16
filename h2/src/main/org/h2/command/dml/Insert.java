@@ -43,10 +43,19 @@ import org.h2.value.Value;
  */
 public final class Insert extends CommandWithValues implements ResultTarget {
 
+    /**
+     * INSERT INTO FROM 的表
+     */
     private Table table;
+    /**
+     * 列名
+     */
     private Column[] columns;
+
     private Query query;
+
     private long rowNumber;
+
     private boolean insertFromSelect;
 
     private Boolean overridingSystem;
@@ -56,6 +65,9 @@ public final class Insert extends CommandWithValues implements ResultTarget {
      */
     private HashMap<Column, Expression> duplicateKeyAssignmentMap;
 
+    /**
+     * 值列表
+     */
     private Value[] onDuplicateKeyRow;
 
     /**
@@ -132,6 +144,7 @@ public final class Insert extends CommandWithValues implements ResultTarget {
         this.deltaChangeCollector = deltaChangeCollector;
         this.deltaChangeCollectionMode = deltaChangeCollectionMode;
         try {
+            // 插入记录
             return insertRows();
         } finally {
             this.deltaChangeCollector = null;
@@ -140,38 +153,42 @@ public final class Insert extends CommandWithValues implements ResultTarget {
     }
 
     private long insertRows() {
+        // 检查用户允许对Table执行INSERT
         session.getUser().checkTableRight(table, Right.INSERT);
         setCurrentRowNumber(0);
         table.fire(session, Trigger.INSERT, true);
         rowNumber = 0;
+        // 值表达式，注意 INSERT INTO VALUES (), ()，其中一个()代表一个Expression
         int listSize = valuesExpressionList.size();
-        if (listSize > 0) {
+        if (listSize > 0) { // INSERT INTO VALUES (), ..., ()
+            // 列长度
             int columnLen = columns.length;
-            for (int x = 0; x < listSize; x++) {
+            for (int x = 0; x < listSize; x++) { // 循环处理每个()
+                // Row 是实际保存一条记录的对象
                 Row newRow = table.getTemplateRow();
                 Expression[] expr = valuesExpressionList.get(x);
                 setCurrentRowNumber(x + 1);
-                for (int i = 0; i < columnLen; i++) {
+                for (int i = 0; i < columnLen; i++) { // 循环处理Row中的所有Column
                     Column c = columns[i];
                     int index = c.getColumnId();
                     Expression e = expr[i];
                     if (e != ValueExpression.DEFAULT) {
                         try {
-                            newRow.setValue(index, e.getValue(session));
+                            newRow.setValue(index, e.getValue(session)); // 设值
                         } catch (DbException ex) {
                             throw setRow(ex, x, getSimpleSQL(expr));
                         }
                     }
                 }
-                rowNumber++;
+                rowNumber++; // 增加记录行数
                 table.convertInsertRow(session, newRow, overridingSystem);
                 if (deltaChangeCollectionMode == ResultOption.NEW) {
                     deltaChangeCollector.addRow(newRow.getValueList().clone());
                 }
                 if (!table.fireBeforeRow(session, null, newRow)) {
-                    table.lock(session, Table.WRITE_LOCK);
+                    table.lock(session, Table.WRITE_LOCK); // 加写锁
                     try {
-                        table.addRow(session, newRow);
+                        table.addRow(session, newRow); // 写入行数据
                     } catch (DbException de) {
                         if (handleOnDuplicate(de, null)) {
                             // MySQL returns 2 for updated row

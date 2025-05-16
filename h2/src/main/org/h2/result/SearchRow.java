@@ -12,8 +12,7 @@ import org.h2.value.Value;
 import org.h2.value.ValueNull;
 
 /**
- * The base class for rows stored in a table, and for partial rows stored in the
- * index.
+ * 表中存储的行和索引中存储的部分行的基类。
  */
 public abstract class SearchRow extends Value {
 

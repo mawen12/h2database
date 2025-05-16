@@ -34,7 +34,7 @@ import org.h2.value.Value;
 import org.h2.value.ValueNull;
 
 /**
- * An index. Indexes are used to speed up searching data.
+ * 一个索引，索引被用于加速查询数据
  */
 public abstract class Index extends SchemaObject {
 
@@ -52,38 +52,45 @@ public abstract class Index extends SchemaObject {
     }
 
     /**
-     * Columns of this index.
+     * 该索引的列
      */
     protected IndexColumn[] indexColumns;
 
     /**
-     * Table columns used in this index.
+     * 该索引使用的表中的列
      */
     protected Column[] columns;
 
     /**
-     * Identities of table columns.
+     * 表列的标识符，即 {@link Column#getColumnId()}
      */
     protected int[] columnIds;
 
     /**
+     *
      * Count of unique columns. Unique columns, if any, are always first columns
      * in the lists.
      */
     protected final int uniqueColumnColumn;
 
     /**
-     * The table.
+     * 该索引所在的表
      */
     protected final Table table;
 
     /**
-     * The index type.
+     * 索引类型，支持主键索引、唯一索引、扫描索引
      */
     protected final IndexType indexType;
 
+    /**
+     * 用于创建行数据的工厂
+     */
     private final RowFactory rowFactory;
 
+    /**
+     * 用于创建唯一行数据的工厂
+     */
     private final RowFactory uniqueRowFactory;
 
     /**

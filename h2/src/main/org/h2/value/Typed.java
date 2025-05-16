@@ -6,12 +6,12 @@
 package org.h2.value;
 
 /**
- * An object with data type.
+ * 带有数据类型的对象
  */
 public interface Typed {
 
     /**
-     * Returns the data type.
+     * 返回数据类型
      *
      * @return the data type
      */

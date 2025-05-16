@@ -35,37 +35,52 @@ import org.h2.value.ValueRow;
 import org.h2.value.ValueUuid;
 
 /**
- * This class represents a column in a table.
+ * 代表一个表的一列。
  */
 public final class Column implements HasSQL, Typed, ColumnTemplate {
 
     /**
-     * The name of the rowid pseudo column.
+     * "rowid" 伪列的名称
      */
     public static final String ROWID = "_ROWID_";
 
     /**
-     * This column is not nullable.
+     * 列不可为空
      */
     public static final int NOT_NULLABLE =
             ResultSetMetaData.columnNoNulls;
 
     /**
-     * This column is nullable.
+     * 列可为空
      */
     public static final int NULLABLE =
             ResultSetMetaData.columnNullable;
 
     /**
-     * It is not know whether this column is nullable.
+     * 不确定列是否为空
      */
     public static final int NULLABLE_UNKNOWN =
             ResultSetMetaData.columnNullableUnknown;
 
+    /**
+     * 列的类型信息
+     */
     private TypeInfo type;
+    /**
+     * 列所在的表
+     */
     private Table table;
+    /**
+     * 列名
+     */
     private String name;
+    /**
+     * 列ID，即列在Table下的所有列中第几个
+     */
     private int columnId;
+    /**
+     * 列是否允许为空标识，默认允许为空
+     */
     private boolean nullable = true;
     private Expression defaultExpression;
     private Expression onUpdateExpression;
@@ -75,9 +90,21 @@ public final class Column implements HasSQL, Typed, ColumnTemplate {
     private boolean isGeneratedAlways;
     private GeneratedColumnResolver generatedTableFilter;
     private int selectivity;
+    /**
+     * 列注释
+     */
     private String comment;
+    /**
+     * 列是否为主键
+     */
     private boolean primaryKey;
+    /**
+     * 列是否可见，默认可见
+     */
     private boolean visible = true;
+    /**
+     * 是否为 rowId 这个特殊的列
+     */
     private boolean rowId;
     private Domain domain;
 

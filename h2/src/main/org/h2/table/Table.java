@@ -46,51 +46,64 @@ import org.h2.value.Value;
 import org.h2.value.ValueNull;
 
 /**
- * This is the base class for most tables.
- * A table contains a list of columns and a list of rows.
+ * 适用于大多数表的基类，表由一组 columns（结构定义） 和一组 rows（数据） 组成。
  */
 public abstract class Table extends SchemaObject {
 
     /**
-     * The table type that means this table is a regular persistent table.
+     * 表类型，表示为常规持久化表（数据保存到磁盘）
      */
     public static final int TYPE_CACHED = 0;
 
     /**
+     * // TODO by mawen typo regular persistent to in-memory
      * The table type that means this table is a regular persistent table.
+     * 表类型，表示为内存表（每次关闭数据便会清除）
      */
     public static final int TYPE_MEMORY = 1;
 
     /**
-     * Read lock.
+     * 读锁
      */
     public static final int READ_LOCK = 0;
 
     /**
-     * Write lock.
+     * 写锁
      */
     public static final int WRITE_LOCK = 1;
 
     /**
-     * Exclusive lock.
+     * 排他锁
      */
     public static final int EXCLUSIVE_LOCK = 2;
 
     /**
-     * The columns of this table.
+     * 表中的列
      */
     protected Column[] columns;
 
     /**
-     * The compare mode used for this table.
+     * 该表使用的比较模式
      */
     protected CompareMode compareMode;
 
     private final HashMap<String, Column> columnMap;
+    /**
+     * 是否持久化索引
+     */
     private final boolean persistIndexes;
     private final boolean persistData;
+    /**
+     * 与该表关联的触发器
+     */
     private ArrayList<TriggerObject> triggers;
+    /**
+     * 与该表关联的约束
+     */
     private ArrayList<Constraint> constraints;
+    /**
+     * 与表关联的序列
+     */
     private ArrayList<Sequence> sequences;
     /**
      * views that depend on this table
@@ -105,6 +118,10 @@ public abstract class Table extends SchemaObject {
     private boolean checkForeignKeyConstraints = true;
     private boolean onCommitDrop, onCommitTruncate;
     private volatile Row nullRow;
+
+    /**
+     * 用于创建空白行的工厂
+     */
     private RowFactory rowFactory = RowFactory.getRowFactory();
 
     protected Table(Schema schema, int id, String name, boolean persistIndexes, boolean persistData) {
@@ -115,9 +132,15 @@ public abstract class Table extends SchemaObject {
         compareMode = schema.getDatabase().getCompareMode();
     }
 
+    /**
+     * 表重命名
+     *
+     * @param newName the new name
+     */
     @Override
     public void rename(String newName) {
         super.rename(newName);
+        // 重建约束
         for (Constraint constraint : getConstraints()) {
             constraint.rebuild();
         }

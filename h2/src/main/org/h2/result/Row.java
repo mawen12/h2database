@@ -10,7 +10,7 @@ import java.util.Arrays;
 import org.h2.value.Value;
 
 /**
- * Represents a row in a table.
+ * 代表一个表的一条记录。
  */
 public abstract class Row extends SearchRow {
 

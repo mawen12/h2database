@@ -15,112 +15,118 @@ import org.h2.util.HasSQL;
 import org.h2.util.ParserUtil;
 
 /**
- * A database object such as a table, an index, or a user.
+ * 代表一个表、一个索引或一个用户的数据库对象
  */
 public abstract class DbObject implements HasSQL {
 
     /**
-     * The object is of the type table or view.
+     * 代表该对象的类型，是 table 还是 view
      */
     public static final int TABLE_OR_VIEW = 0;
 
     /**
-     * This object is an index.
+     * 该对象是 index
      */
     public static final int INDEX = 1;
 
     /**
-     * This object is a user.
+     * 该对象是 user
      */
     public static final int USER = 2;
 
     /**
-     * This object is a sequence.
+     * 该对象是 sequence
      */
     public static final int SEQUENCE = 3;
 
     /**
-     * This object is a trigger.
+     * 该对象是 trigger
      */
     public static final int TRIGGER = 4;
 
     /**
-     * This object is a constraint (check constraint, unique constraint, or
-     * referential constraint).
+     * 该对象是 constraint (check constraint, unique constraint 或 referential constraint)
      */
     public static final int CONSTRAINT = 5;
 
     /**
-     * This object is a setting.
+     * 该对象是 setting
      */
     public static final int SETTING = 6;
 
     /**
-     * This object is a role.
+     * 该对象是 role
      */
     public static final int ROLE = 7;
 
     /**
-     * This object is a right.
+     * 该对象是 right
      */
     public static final int RIGHT = 8;
 
     /**
-     * This object is an alias for a Java function.
+     * 该对象是 Java 函数的别名
      */
     public static final int FUNCTION_ALIAS = 9;
 
     /**
-     * This object is a schema.
+     * 该对象是一个 schema
      */
     public static final int SCHEMA = 10;
 
     /**
-     * This object is a constant.
+     * 该对象是一个 constant
+     *
      */
     public static final int CONSTANT = 11;
 
     /**
-     * This object is a domain.
+     * 该对象是一个 domain.
      */
     public static final int DOMAIN = 12;
 
     /**
-     * This object is a comment.
+     * 该对象是一个 comment.
      */
     public static final int COMMENT = 13;
 
     /**
-     * This object is a user-defined aggregate function.
+     * 该对象是一个 用户定义的 aggregate 函数.
      */
     public static final int AGGREGATE = 14;
 
     /**
-     * This object is a synonym.
+     * 该对象是一个 synonym.
      */
     public static final int SYNONYM = 15;
 
     /**
-     * The database.
+     * 数据库
      */
     protected Database database;
 
     /**
-     * The trace module.
+     * 追踪模块
      */
     protected Trace trace;
 
     /**
-     * The comment (if set).
+     * 注释（可空）
      */
     protected String comment;
 
     private int id;
 
+    /**
+     * 对象名，对应到Table，就是表名
+     */
     private String objectName;
 
     private long modificationId;
 
+    /**
+     * 是否临时的
+     */
     private boolean temporary;
 
     /**

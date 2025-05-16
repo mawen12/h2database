@@ -16,7 +16,7 @@ import org.h2.table.Table;
 import org.h2.table.TableFilter;
 
 /**
- * Data change statement.
+ * 数据变更语句，支持 {@code MERGE}, {@code INSERT}, {@code DELETE}, {@code UPDATE}
  */
 public abstract class DataChangeStatement extends Prepared {
 

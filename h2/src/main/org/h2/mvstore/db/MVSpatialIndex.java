@@ -51,7 +51,7 @@ import org.h2.value.VersionedValue;
 public final class MVSpatialIndex extends MVIndex<Spatial, Value> implements SpatialIndex {
 
     /**
-     * The multi-value table.
+     * 与索引关联的表
      */
     final MVTable mvTable;
 

@@ -35,10 +35,13 @@ import org.h2.value.ValueLob;
 import org.h2.value.VersionedValue;
 
 /**
- * A table stored in a MVStore.
+ * 存储在 MVStore 中的表
  */
 public final class MVPrimaryIndex extends MVIndex<Long, SearchRow> {
 
+    /**
+     * 与索引关联的表
+     */
     private final MVTable mvTable;
     private final String mapName;
     private final TransactionMap<Long, SearchRow> dataMap;

@@ -10,6 +10,7 @@ import org.h2.result.SortOrder;
 
 /**
  * Describes one element of the ORDER BY clause of a query.
+ *
  */
 public class QueryOrderBy {
 

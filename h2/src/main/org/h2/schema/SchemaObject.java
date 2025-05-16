@@ -8,7 +8,7 @@ package org.h2.schema;
 import org.h2.engine.DbObject;
 
 /**
- * Any database object that is stored in a schema.
+ * 存储在 schema 中的任何数据库对象
  */
 public abstract class SchemaObject extends DbObject {
 

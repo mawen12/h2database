@@ -18,182 +18,185 @@ import org.h2.engine.Constants;
 import org.h2.message.DbException;
 
 /**
- * Data type with parameters.
+ * 参数的数据类型
  */
 public class TypeInfo extends ExtTypeInfo implements Typed {
 
     /**
-     * UNKNOWN type with parameters.
+     * 未知类型
      */
     public static final TypeInfo TYPE_UNKNOWN;
 
     /**
-     * NULL type with parameters.
+     * NULL 类型
      */
     public static final TypeInfo TYPE_NULL;
 
     /**
-     * CHAR type with default parameters.
+     * 具有默认参数的 CHAR 类型，长度不可变
      */
     public static final TypeInfo TYPE_CHAR;
 
     /**
-     * CHARACTER VARYING type with maximum parameters.
+     * 具有最大参数的可变 CHAR 类型，(VAR 是 VARYING 的缩写，代表长度可变)
+     * 使用方式为 VARCHAR(xxx)，其中(xxx)就是带参数的含义
      */
     public static final TypeInfo TYPE_VARCHAR;
 
     /**
-     * VARCHAR_IGNORECASE type with maximum parameters.
+     * 具有最大参数的可变 CHAR 类型，在 {@link TypeInfo#TYPE_VARCHAR}基础上忽略大小写。
+     *
      */
     public static final TypeInfo TYPE_VARCHAR_IGNORECASE;
 
     /**
-     * CHARACTER LARGE OBJECT type with maximum parameters.
+     * 具有最大参数的字符大对象类型（CLOB 是 Character Large Object 的缩写）
+     * 使用方式为 CLOB(xxx)
      */
     public static final TypeInfo TYPE_CLOB;
 
     /**
-     * BINARY type with default parameters.
+     * 具有默认参数的 BINARY 类型
      */
     public static final TypeInfo TYPE_BINARY;
 
     /**
-     * BINARY VARYING type with maximum parameters.
+     * 具有最大参数的可变 BINARY 类型
      */
     public static final TypeInfo TYPE_VARBINARY;
 
     /**
-     * BINARY LARGE OBJECT type with maximum parameters.
+     * 具有最大类型的二进制大对象类型（BLOB 是 Binary Large Object 的缩写）
      */
     public static final TypeInfo TYPE_BLOB;
 
     /**
-     * BOOLEAN type with parameters.
+     * 带参数的 BOOLEAN 类型
      */
     public static final TypeInfo TYPE_BOOLEAN;
 
     /**
-     * TINYINT type with parameters.
+     * 带参数的 TINYINT 类型
      */
     public static final TypeInfo TYPE_TINYINT;
 
     /**
-     * SMALLINT type with parameters.
+     * 带参数的 SMALLINT 类型
      */
     public static final TypeInfo TYPE_SMALLINT;
 
     /**
-     * INTEGER type with parameters.
+     * 带参数的 INTEGER 类型
      */
     public static final TypeInfo TYPE_INTEGER;
 
     /**
-     * BIGINT type with parameters.
+     * 带参数的 BIGINT 类型
      */
     public static final TypeInfo TYPE_BIGINT;
 
     /**
-     * NUMERIC type with maximum precision and scale 0.
+     * 带有最大精度和小数位为0的 NUMERIC 类型
      */
     public static final TypeInfo TYPE_NUMERIC_SCALE_0;
 
     /**
-     * NUMERIC type with parameters enough to hold a BIGINT value.
+     * 具有足够参数来保存 BIGINT 值的 NUMERIC 类型
      */
     public static final TypeInfo TYPE_NUMERIC_BIGINT;
 
     /**
-     * NUMERIC type that can hold values with floating point.
+     * 可以持有带有浮点的值的 NUMERIC 类型
      */
     public static final TypeInfo TYPE_NUMERIC_FLOATING_POINT;
 
     /**
-     * REAL type with parameters.
+     * 带有参数的 REAL 类型
      */
     public static final TypeInfo TYPE_REAL;
 
     /**
-     * DOUBLE PRECISION type with parameters.
+     * 带有参数的双精度类型
      */
     public static final TypeInfo TYPE_DOUBLE;
 
     /**
-     * DECFLOAT type with maximum parameters.
+     * 带有最大参数的 DECFLOAT 类型
      */
     public static final TypeInfo TYPE_DECFLOAT;
 
     /**
-     * DECFLOAT type with parameters enough to hold a BIGINT value.
+     * 带有足够参数能保存 BIGINT 值的 DECFLOAT 类型
      */
     public static final TypeInfo TYPE_DECFLOAT_BIGINT;
 
     /**
-     * DATE type with parameters.
+     * 带有参数的 DATE 类型
      */
     public static final TypeInfo TYPE_DATE;
 
     /**
-     * TIME type with maximum parameters.
+     * 带有最大参数的 TIME 类型
      */
     public static final TypeInfo TYPE_TIME;
 
     /**
-     * TIME WITH TIME ZONE type with maximum parameters.
+     * 带有最大参数的 TIME WITH TIME ZONE 类型
      */
     public static final TypeInfo TYPE_TIME_TZ;
 
     /**
-     * TIMESTAMP type with maximum parameters.
+     * 带有最大参数的 TIMESTAMP 类型
      */
     public static final TypeInfo TYPE_TIMESTAMP;
 
     /**
-     * TIMESTAMP WITH TIME ZONE type with maximum parameters.
+     * 带有最大参数的 TIMESTAMP WITH TIME ZONE 类型
      */
     public static final TypeInfo TYPE_TIMESTAMP_TZ;
 
     /**
-     * INTERVAL DAY type with maximum parameters.
+     * 带有最大参数的 INTERVAL DAY 类型
      */
     public static final TypeInfo TYPE_INTERVAL_DAY;
 
     /**
-     * INTERVAL YEAR TO MONTH type with maximum parameters.
+     * 带有最大参数的 INTERVAL YEAR TO MONTH 类型
      */
     public static final TypeInfo TYPE_INTERVAL_YEAR_TO_MONTH;
 
     /**
-     * INTERVAL DAY TO SECOND type with maximum parameters.
+     * 带有最大参数的 INTERVAL DAY TO SECOND
      */
     public static final TypeInfo TYPE_INTERVAL_DAY_TO_SECOND;
 
     /**
-     * INTERVAL HOUR TO SECOND type with maximum parameters.
+     * 具有最大参数的 INTERVAL HOUR TO SECOND 类型
      */
     public static final TypeInfo TYPE_INTERVAL_HOUR_TO_SECOND;
 
     /**
-     * JAVA_OBJECT type with maximum parameters.
+     * 带有最大参数的 JAVA_OBJECT
      */
     public static final TypeInfo TYPE_JAVA_OBJECT;
 
     /**
-     * ENUM type with undefined parameters.
+     * 带有未定义的 ENUM 类型
      */
     public static final TypeInfo TYPE_ENUM_UNDEFINED;
 
     /**
-     * GEOMETRY type with default parameters.
+     * 带有默认参数的 GEOMETRY
      */
     public static final TypeInfo TYPE_GEOMETRY;
 
     /**
-     * JSON type.
+     * JSON 类型
      */
     public static final TypeInfo TYPE_JSON;
 
     /**
-     * UUID type with parameters.
+     * 带有参数的 UUID 类型
      */
     public static final TypeInfo TYPE_UUID;
 

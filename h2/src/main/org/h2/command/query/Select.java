@@ -64,6 +64,11 @@ import org.h2.value.Value;
 import org.h2.value.ValueRow;
 
 /**
+ * 代表简单查询语句。
+ *
+ * <p>对于每条语句，其 {@code visibleColumnCount <= distinctColumnCount <= expressionCount}
+ *
+ *
  * This class represents a simple SELECT statement.
  * <p>
  * For each select statement,
@@ -81,7 +86,7 @@ public class Select extends Query {
     private enum QuickOffset { NO, YES, PARTIAL }
 
     /**
-     * The main (top) table filter.
+     * 主要的表过滤器
      */
     TableFilter topTableFilter;
 
@@ -94,12 +99,12 @@ public class Select extends Query {
     private final Select parentSelect;
 
     /**
-     * WHERE condition.
+     * WHERE 条件
      */
     private Expression condition;
 
     /**
-     * HAVING condition.
+     * HAVING 条件
      */
     private Expression having;
 

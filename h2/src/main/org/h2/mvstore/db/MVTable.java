@@ -46,7 +46,7 @@ import org.h2.value.DataType;
 import org.h2.value.TypeInfo;
 
 /**
- * A table stored in a MVStore.
+ * 代表存储在 MVStore 中的表，MVTable 是 Multi-Value Table 的缩写
  */
 public class MVTable extends TableBase {
     /**
@@ -102,31 +102,35 @@ public class MVTable extends TableBase {
     }
 
     /**
-     * Whether the table contains a CLOB or BLOB.
+     * 该表是否包含 CLOB 或 BLOB
      */
     private final boolean containsLargeObject;
 
     /**
-     * The session (if any) that has exclusively locked this table.
+     * 独占锁定此表的Session
      */
     private volatile SessionLocal lockExclusiveSession;
 
     /**
-     * The set of sessions (if any) that have a shared lock on the table. Here
-     * we are using a ConcurrentHashMap as a set, as there is no
-     * ConcurrentHashSet.
+     * 在此表上拥有共享锁的session集合。由于没有 ConcurrentHashSet，
+     * 因此将 ConcurrentHashMap当作Set使用
      */
     private final ConcurrentHashMap<SessionLocal, SessionLocal> lockSharedSessions = new ConcurrentHashMap<>();
 
     private Column rowIdColumn;
 
+    /**
+     * 主索引
+     */
     private final MVPrimaryIndex primaryIndex;
+    /**
+     * 索引集合
+     */
     private final ArrayList<Index> indexes = Utils.newSmallArrayList();
     private final AtomicLong lastModificationId = new AtomicLong();
 
     /**
-     * The queue of sessions waiting to lock the table. It is a FIFO queue to
-     * prevent starvation, since Java's synchronized locking is biased.
+     * 代表等待锁定该表的会话的队列，这是一个 FIFO 队列以防止饥饿，因为 Java 的同步锁是非公平的。
      */
     private final ArrayDeque<SessionLocal> waitingSessions = new ArrayDeque<>();
     private final Trace traceLock;
@@ -163,28 +167,28 @@ public class MVTable extends TableBase {
 
     @Override
     public boolean lock(SessionLocal session, int lockType) {
-        if (database.getLockMode() == Constants.LOCK_MODE_OFF) {
+        if (database.getLockMode() == Constants.LOCK_MODE_OFF) { // 关闭锁时，无法获取锁
             session.registerTableAsUpdated(this);
             return false;
         }
-        if (lockType == Table.READ_LOCK && lockExclusiveSession == null) {
+        if (lockType == Table.READ_LOCK && lockExclusiveSession == null) { // 当申请读锁，但是独占锁定session为null时，代表并非当前当前session
             return false;
         }
-        if (lockExclusiveSession == session) {
+        if (lockExclusiveSession == session) { // 当前独占会话就是该会话，代表之前该session已经获取到排他锁
             return true;
         }
-        if (lockType != Table.EXCLUSIVE_LOCK && lockSharedSessions.containsKey(session)) {
+        if (lockType != Table.EXCLUSIVE_LOCK && lockSharedSessions.containsKey(session)) { // 获取非排他锁，即读锁，且登记过会话
             return true;
         }
-        synchronized (this) {
-            if (lockType != Table.EXCLUSIVE_LOCK && lockSharedSessions.containsKey(session)) {
+        synchronized (this) { // 同步
+            if (lockType != Table.EXCLUSIVE_LOCK && lockSharedSessions.containsKey(session)) { // 二次检查：获取非排他锁，即读锁，且登记过会话
                 return true;
             }
-            session.setWaitForLock(this, Thread.currentThread());
+            session.setWaitForLock(this, Thread.currentThread()); // 更新为等待获取锁的状态
             if (SysProperties.THREAD_DEADLOCK_DETECTOR) {
                 WAITING_FOR_LOCK.set(getName());
             }
-            waitingSessions.addLast(session);
+            waitingSessions.addLast(session); // 进入等待队列，这是一个FIFO队列
             try {
                 doLock1(session, lockType);
             } finally {

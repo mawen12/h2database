@@ -43,8 +43,7 @@ import org.h2.value.lob.LobDataDatabase;
 import org.h2.value.lob.LobDataInMemory;
 
 /**
- * This is the base class for all value classes.
- * It provides conversion and comparison methods.
+ * 值类的基类，该类提供了值转换和值比较方法。
  *
  * @author Thomas Mueller
  * @author Noel Grandin

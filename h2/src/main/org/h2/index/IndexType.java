@@ -10,10 +10,20 @@ import java.util.Objects;
 import org.h2.engine.NullsDistinct;
 
 /**
- * Represents information about the properties of an index
+ * 代表关于索引属性的信息
+ *
+ * <p>支持的索引：
+ * <ul>
+ *     <li>主键索引：primaryKey=true</li>
+ *     <li>唯一索引：hash=true</li>
+ *     <li>扫描伪索引：scan=true</li>
+ * </ul>
  */
 public class IndexType {
 
+    /**
+     * 主键、持久化、哈希、扫描、空间
+     */
     private boolean primaryKey, persistent, hash, scan, spatial;
     private boolean belongsToConstraint;
     private NullsDistinct nullsDistinct;

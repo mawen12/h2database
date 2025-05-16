@@ -11,45 +11,55 @@ import org.h2.schema.Schema;
 import org.h2.table.Table;
 
 /**
- * An access right. Rights are regular database objects, but have generated
- * names.
+ * 代表访问权限。权限是常规数据库对象，但是已生成名称。
+ *
+ * <p>权限分为6种，其中4种是DML，2种是DDL。
+ *
+ * <p>权限使用二进制位管理，高效。
  */
 public final class Right extends DbObject {
 
     /**
      * The right bit mask that means: selecting from a table is allowed.
+     * 0000_0001
      */
     public static final int SELECT = 1;
 
     /**
      * The right bit mask that means: deleting rows from a table is allowed.
+     * 0000_0010
      */
     public static final int DELETE = 2;
 
     /**
      * The right bit mask that means: inserting rows into a table is allowed.
+     * 0000_0100
      */
     public static final int INSERT = 4;
 
     /**
      * The right bit mask that means: updating data is allowed.
+     * 0000_1000
      */
     public static final int UPDATE = 8;
 
     /**
      * The right bit mask that means: create/alter/drop schema is allowed.
+     * 0001_0000
      */
     public static final int ALTER_ANY_SCHEMA = 16;
 
     /**
      * The right bit mask that means: user is a schema owner. This mask isn't
      * used in GRANT / REVOKE statements.
+     * 0010_0000
      */
     public static final int SCHEMA_OWNER = 32;
 
     /**
      * The right bit mask that means: select, insert, update, delete, and update
      * for this object is allowed.
+     * 0000_1111
      */
     public static final int ALL = SELECT | DELETE | INSERT | UPDATE;
 

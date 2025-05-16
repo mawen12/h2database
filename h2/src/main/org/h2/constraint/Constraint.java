@@ -25,23 +25,23 @@ public abstract class Constraint extends SchemaObject implements Comparable<Cons
 
     public enum Type {
         /**
-         * The constraint type for check constraints.
+         * 检查约束类型，例如：NOT NULl
          */
         CHECK,
         /**
-         * The constraint type for primary key constraints.
+         * 主键约束类型
          */
         PRIMARY_KEY,
         /**
-         * The constraint type for unique constraints.
+         * 唯一约束类型
          */
         UNIQUE,
         /**
-         * The constraint type for referential constraints.
+         * 引用约束类型
          */
         REFERENTIAL,
         /**
-         * The constraint type for domain constraints.
+         * 领域约束类型
          */
         DOMAIN;
 

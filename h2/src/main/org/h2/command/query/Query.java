@@ -47,7 +47,7 @@ import org.h2.value.ValueInteger;
 import org.h2.value.ValueNull;
 
 /**
- * Represents a SELECT statement (simple, or union).
+ * 代表 SELECT 语句（simple或union）
  */
 public abstract class Query extends Prepared {
 

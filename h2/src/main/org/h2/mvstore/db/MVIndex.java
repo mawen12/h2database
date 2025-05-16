@@ -16,7 +16,7 @@ import org.h2.table.Table;
 import org.h2.value.VersionedValue;
 
 /**
- * An index that stores the data in an MVStore.
+ * 存储数据在 MVStore 中的索引
  */
 public abstract class MVIndex<K,V> extends Index {
 

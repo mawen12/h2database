@@ -87,26 +87,23 @@ public class Constants {
     public static final int VERSION_MINOR = 3;
 
     /**
-     * The lock mode that means no locking is used at all.
+     * 不使用锁
      */
     public static final int LOCK_MODE_OFF = 0;
 
     /**
-     * The lock mode that means read locks are acquired, but they are released
-     * immediately after the statement is executed.
+     * 该锁意味着获取读锁，但在语句执行完成后立即释放
      */
     public static final int LOCK_MODE_READ_COMMITTED = 3;
 
     /**
-     * The lock mode that means table level locking is used for reads and
-     * writes.
+     * 当执行读写时，使用 Table Level Lock
      */
     public static final int LOCK_MODE_TABLE = 1;
 
     /**
-     * The lock mode that means table level locking is used for reads and
-     * writes. If a table is locked, System.gc is called to close forgotten
-     * connections.
+     * 该锁意味着使用当执行读写时，使用 Table Level Lock。
+     * 如果一个表被索引，则调用 System.gc 来释放被遗忘的连接。
      */
     public static final int LOCK_MODE_TABLE_GC = 2;
 

@@ -36,12 +36,12 @@ import org.h2.value.ValueNull;
 import org.h2.value.VersionedValue;
 
 /**
- * An index stored in a MVStore.
+ * 存储在 MVStore 中的索引
  */
 public final class MVSecondaryIndex extends MVIndex<SearchRow, Value> {
 
     /**
-     * The multi-value table.
+     * 与索引关联的表
      */
     private final MVTable                         mvTable;
     private final TransactionMap<SearchRow,Value> dataMap;
