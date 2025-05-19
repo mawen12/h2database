@@ -118,7 +118,7 @@ public abstract class DbObject implements HasSQL {
     private int id;
 
     /**
-     * 对象名，对应到Table，就是表名
+     * 对象名，对应到Table，就是表名，对应到PrimaryIndex，就是 <tableName>_DATA
      */
     private String objectName;
 

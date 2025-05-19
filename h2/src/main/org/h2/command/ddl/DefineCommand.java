@@ -10,8 +10,7 @@ import org.h2.engine.SessionLocal;
 import org.h2.result.ResultInterface;
 
 /**
- * This class represents a non-transaction statement, for example a CREATE or
- * DROP.
+ * 该类代表非事务的语句，例如 CREATE / DROP
  */
 public abstract class DefineCommand extends Prepared {
 

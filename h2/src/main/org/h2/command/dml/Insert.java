@@ -153,7 +153,7 @@ public final class Insert extends CommandWithValues implements ResultTarget {
     }
 
     private long insertRows() {
-        // 检查用户允许对Table执行INSERT
+        // 检查用户允许对Table具有INSERT权限
         session.getUser().checkTableRight(table, Right.INSERT);
         setCurrentRowNumber(0);
         table.fire(session, Trigger.INSERT, true);
@@ -185,10 +185,10 @@ public final class Insert extends CommandWithValues implements ResultTarget {
                 if (deltaChangeCollectionMode == ResultOption.NEW) {
                     deltaChangeCollector.addRow(newRow.getValueList().clone());
                 }
-                if (!table.fireBeforeRow(session, null, newRow)) {
+                if (!table.fireBeforeRow(session, null, newRow)) { // 触发插入之前的trigger
                     table.lock(session, Table.WRITE_LOCK); // 加写锁
                     try {
-                        table.addRow(session, newRow); // 写入行数据
+                        table.addRow(session, newRow); // 真正执行插入
                     } catch (DbException de) {
                         if (handleOnDuplicate(de, null)) {
                             // MySQL returns 2 for updated row
@@ -202,13 +202,13 @@ public final class Insert extends CommandWithValues implements ResultTarget {
                     }
                     DataChangeDeltaTable.collectInsertedFinalRow(session, table, deltaChangeCollector,
                             deltaChangeCollectionMode, newRow);
-                    table.fireAfterRow(session, null, newRow, false);
+                    table.fireAfterRow(session, null, newRow, false); // 触发插入之后的trigger
                 } else {
                     DataChangeDeltaTable.collectInsertedFinalRow(session, table, deltaChangeCollector,
                             deltaChangeCollectionMode, newRow);
                 }
             }
-        } else {
+        } else { // INSERT INTO SELECT FROM
             table.lock(session, Table.WRITE_LOCK);
             if (insertFromSelect) {
                 query.query(0, this);

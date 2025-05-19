@@ -17,6 +17,8 @@ import org.h2.value.VersionedValue;
 
 /**
  * 存储数据在 MVStore 中的索引
+ *
+ * <p><Key, Row>
  */
 public abstract class MVIndex<K,V> extends Index {
 

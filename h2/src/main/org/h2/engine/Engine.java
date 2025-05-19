@@ -191,7 +191,7 @@ public final class Engine {
     }
 
     /**
-     * Open a database connection with the given connection information.
+     * 使用给定的连接信息打开一个数据库连接
      *
      * @param ci the connection information
      * @return the session

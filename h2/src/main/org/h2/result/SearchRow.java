@@ -33,7 +33,7 @@ public abstract class SearchRow extends Value {
     public static final int MEMORY_CALCULATE = -1;
 
     /**
-     * The row key.
+     * 行的唯一key
      */
     protected long key;
 

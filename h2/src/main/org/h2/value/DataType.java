@@ -659,7 +659,7 @@ public class DataType {
     }
 
     /**
-     * Check if the given value type is a large object (BLOB or CLOB).
+     * 检查给定值是否为大对象（BLOB / CLOB）
      *
      * @param type the value type
      * @return true if the value type is a lob type

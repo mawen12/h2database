@@ -17,6 +17,9 @@ import org.h2.schema.Sequence;
 import org.h2.table.Column;
 import org.h2.table.IndexColumn;
 
+/**
+ * 该类代表涉及schema中column的非事务语句
+ */
 public abstract class CommandWithColumns extends SchemaCommand {
 
     private ArrayList<DefineCommand> constraintCommands;

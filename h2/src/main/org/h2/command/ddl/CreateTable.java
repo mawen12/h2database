@@ -23,16 +23,24 @@ import org.h2.table.Table;
 import org.h2.value.Value;
 
 /**
- * This class represents the statement
- * CREATE TABLE
+ * 该类代表 CREATE TABLE 语句
  */
 public class CreateTable extends CommandWithColumns {
 
+    /**
+     * 建表语句对象，包含了表名、列信息、schema、是否持久化等
+     */
     private final CreateTableData data = new CreateTableData();
+    /**
+     * 是否仅在表不存在时创建
+     */
     private boolean ifNotExists;
     private boolean onCommitDrop;
     private boolean onCommitTruncate;
     private Query asQuery;
+    /**
+     * 表注释
+     */
     private String comment;
     private boolean withNoData;
 
@@ -109,9 +117,9 @@ public class CreateTable extends CommandWithColumns {
         changePrimaryKeysToNotNull(data.columns);
         data.id = getObjectId();
         data.session = session;
-        Table table = schema.createTable(data);
+        Table table = schema.createTable(data); // 在该schema下创建table
         ArrayList<Sequence> sequences = generateSequences(data.columns, data.temporary);
-        table.setComment(comment);
+        table.setComment(comment); // 设置table注释
         if (isSessionTemporary) {
             if (onCommitDrop) {
                 table.setOnCommitDrop(true);

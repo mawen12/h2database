@@ -20,50 +20,41 @@ import org.h2.mvstore.type.DataType;
 import org.h2.value.VersionedValue;
 
 /**
- * A transaction.
+ * 代表一个事务
  */
 public final class Transaction {
 
     /**
-     * The status of a closed transaction (committed or rolled back).
+     * 已关闭的事务状态（已提交/回滚）
      */
     public static final int STATUS_CLOSED = 0;
 
     /**
-     * The status of an open transaction.
+     * 已打开事务的状态
      */
     public static final int STATUS_OPEN = 1;
 
     /**
-     * The status of a prepared transaction.
+     * 已准备事务的状态
      */
     public static final int STATUS_PREPARED = 2;
 
     /**
-     * The status of a transaction that has been logically committed or rather
-     * marked as committed, because it might be still listed among prepared,
-     * if it was prepared for commit. Undo log entries might still exists for it
-     * and not all of it's changes within map's are re-written as committed yet.
-     * Nevertheless, those changes should be already viewed by other
-     * transactions as committed.
-     * This transaction's id can not be re-used until all of the above is completed
-     * and transaction is closed.
-     * A transactions can be observed in this state when the store was
-     * closed while the transaction was not closed yet.
-     * When opening a store, such transactions will automatically
-     * be processed and closed as committed.
+     * 该事务的状态为逻辑上已提交，或者更确切地说，已标记为已提交。因为如果它已准备好提交，
+     * 它可能仍列在“准备就绪”状态中。它的undo log条目仍然可能存在，并且在其映射中的更改
+     * 尚未全部重写为已提交。尽管如此，其他事务应该已经将这些更改视为已提交。
+     * 此事务的ID必须在上述所有操作完成且事务关闭之前无法重复使用。如果存储已关闭但事务
+     * 尚未关闭，则可以观察到处于此状态的事务。打开存储时，此类事务将自动处理并关闭为已提交。
      */
     public static final int STATUS_COMMITTED = 3;
 
     /**
-     * The status of a transaction that currently in a process of rolling back
-     * to a savepoint.
+     * 当前正在回滚到savepoint的事务的状态
      */
     private static final int STATUS_ROLLING_BACK = 4;
 
     /**
-     * The status of a transaction that has been rolled back completely,
-     * but undo operations are not finished yet.
+     * 事务已完全回滚，但撤销操作尚未完成的状态
      */
     private static final int STATUS_ROLLED_BACK  = 5;
 
@@ -83,60 +74,56 @@ public final class Transaction {
 
 
     /**
-     * The transaction store.
+     * 事务存储
      */
     final TransactionStore store;
 
     /**
-     * Listener for this transaction's rollback changes.
+     * 该事务回滚变更的监听器
      */
     final TransactionStore.RollbackListener listener;
 
     /**
-     * The transaction id.
-     * More appropriate name for this field would be "slotId"
+     * 事务ID。该字段更合适的名称是 “slotId”
      */
     final int transactionId;
 
     /**
-     * This is really a transaction identity, because it's not re-used.
+     * 这是事务的身份，因为它不会被重复使用
      */
     final long sequenceNum;
 
-    /*
-     * Transaction state is an atomic composite field:
-     * bit  45      : flag whether transaction had rollback(s)
-     * bits 44-41   : status
-     * bits 40      : overflow control bit, 1 indicates overflow
-     * bits 39-0    : log id of the last entry in the undo log map
+    /**
+     * 事务状态是一个原子复合状态：
+     * bit 45: 事务是否已回滚的标识
+     * bits 44-41: 状态
+     * bits 40: 溢出控制位，1表示溢出
+     * bits 39-0: undo log 映射中最后一个条目的日志id
      */
     private final AtomicLong statusAndLogId;
 
     /**
-     * Reference to a counter for an earliest store version used by this transaction.
-     * Referenced version and all newer ones can not be discarded
-     * at least until this transaction ends.
+     * 引用此事务使用的最早存储版本的计数器。至少在此事务结束之前，引用的版本和所有较新的版本都不能被丢弃。
      */
     private MVStore.TxCounter txCounter;
 
     /**
-     * Transaction name.
+     * 事务名称
      */
     private String name;
 
     /**
-     * Indicates whether this transaction was stored in preparedTransactions map
+     * 表示该事务是否被存储在 preparedTransactions map
      */
     boolean wasStored;
 
     /**
-     * How long to wait for blocking transaction to commit or rollback.
+     * 等待阻塞事务提交或回滚的时间
      */
     int timeoutMillis;
 
     /**
-     * Identification of the owner of this transaction,
-     * usually the owner is a database session.
+     * 标识此事务的拥有者，通常所有者是数据库session
      */
     private final int ownerId;
 

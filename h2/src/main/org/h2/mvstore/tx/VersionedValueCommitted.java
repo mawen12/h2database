@@ -8,13 +8,13 @@ package org.h2.mvstore.tx;
 import org.h2.value.VersionedValue;
 
 /**
- * Class CommittedVersionedValue.
+ * 代表已提交的值
  *
  * @author <a href='mailto:andrei.tokar@gmail.com'>Andrei Tokar</a>
  */
 class VersionedValueCommitted<T> extends VersionedValue<T> {
     /**
-     * The current value.
+     * 当前值
      */
     public final T value;
 

@@ -1608,12 +1608,13 @@ public final class SessionLocal extends Session implements TransactionStore.Roll
      */
     public Transaction getTransaction() {
         if (transaction == null) {
-            Store store = getDatabase().getStore();
-            if (store.getMvStore().isClosed()) {
+            Store store = getDatabase().getStore(); // 获取数据库所在的存储
+            if (store.getMvStore().isClosed()) { // 存储已关闭，则无法创建事务，此时跑出异常
                 Throwable backgroundException = getDatabase().getBackgroundException();
                 getDatabase().shutdownImmediately();
                 throw DbException.get(ErrorCode.DATABASE_IS_CLOSED, backgroundException);
             }
+            // 从事务存储中开始一个事务
             transaction = store.getTransactionStore().begin(this, this.lockTimeout, id, isolationLevel);
             startStatement = -1;
         }

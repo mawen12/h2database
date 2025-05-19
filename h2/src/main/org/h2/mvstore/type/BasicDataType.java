@@ -10,7 +10,7 @@ import org.h2.mvstore.DataUtils;
 import org.h2.mvstore.WriteBuffer;
 
 /**
- * The base class for data type implementations.
+ * 数据类型实现的基类
  *
  * @author <a href='mailto:andrei.tokar@gmail.com'>Andrei Tokar</a>
  */

@@ -25,14 +25,9 @@ import org.h2.mvstore.type.DataType;
 import org.h2.value.VersionedValue;
 
 /**
- * A map that supports transactions.
+ * 支持事务的Map。实现事务隔离、并发控制和版本管理（MVCC）的关键组件
  *
- * <p>
- * <b>Methods of this class may be changed at any time without notice.</b> If
- * you use this class directly make sure that your application or library
- * requires exactly the same version of MVStore or H2 jar as the version that
- * you use during its development and build.
- * </p>
+ * <p>底层基于 MVMap<K,V>，是 MVStore 的事务感知包装器，支持原子操作、隔离读写和提交/回滚
  *
  * @param <K> the key type
  * @param <V> the value type
@@ -40,10 +35,8 @@ import org.h2.value.VersionedValue;
 public final class TransactionMap<K, V> extends AbstractMap<K,V> {
 
     /**
-     * The map used for writing (the latest version).
-     * <p>
-     * Key: key the key of the data.
-     * Value: { transactionId, oldVersion, value }
+     * 将每个Value变为一个带事务版本信息的对象（例如：事务ID、是否已提交等）
+     * <key, { transactionId, oldVersion, value }>
      */
     public final MVMap<K, VersionedValue<V>> map;
 
@@ -451,41 +444,41 @@ public final class TransactionMap<K, V> extends AbstractMap<K,V> {
     }
 
     /**
-     * Get the value for the given key, or null if value does not exist in accordance with transactional rules.
-     * Value is taken from a snapshot, appropriate for an isolation level of the related transaction
+     * 获取指定键的值，如果根据事务规则不存在该值，则返回null。
+     * 该值取自snapshot，适用于相关事务的隔离级别
      *
      * @param key the key
      * @return the value, or null if not found
      */
     public V getFromSnapshot(K key) {
         switch (transaction.isolationLevel) {
-        case READ_UNCOMMITTED: {
-            Snapshot<K,VersionedValue<V>> snapshot = getStatementSnapshot();
-            VersionedValue<V> data = map.get(snapshot.root.root, key);
-            if (data != null) {
-                return data.getCurrentValue();
-            }
-            return null;
-        }
-        case REPEATABLE_READ:
-        case SNAPSHOT:
-        case SERIALIZABLE:
-            if (transaction.hasChanges()) {
+            case READ_UNCOMMITTED: { // 读未提交
                 Snapshot<K,VersionedValue<V>> snapshot = getStatementSnapshot();
                 VersionedValue<V> data = map.get(snapshot.root.root, key);
                 if (data != null) {
-                    long id = data.getOperationId();
-                    if (id != 0L && transaction.transactionId == TransactionStore.getTransactionId(id)) {
-                        return data.getCurrentValue();
+                    return data.getCurrentValue();
+                }
+                return null;
+            }
+            case REPEATABLE_READ: // 可重复读
+            case SNAPSHOT: // 快照
+            case SERIALIZABLE: // 串行
+                if (transaction.hasChanges()) {
+                    Snapshot<K,VersionedValue<V>> snapshot = getStatementSnapshot();
+                    VersionedValue<V> data = map.get(snapshot.root.root, key);
+                    if (data != null) {
+                        long id = data.getOperationId();
+                        if (id != 0L && transaction.transactionId == TransactionStore.getTransactionId(id)) {
+                            return data.getCurrentValue();
+                        }
                     }
                 }
+                //$FALL-THROUGH$
+            case READ_COMMITTED: // 读已提交
+            default:
+                Snapshot<K,VersionedValue<V>> snapshot = getSnapshot();
+                return getFromSnapshot(snapshot.root, snapshot.committingTransactions, key);
             }
-            //$FALL-THROUGH$
-        case READ_COMMITTED:
-        default:
-            Snapshot<K,VersionedValue<V>> snapshot = getSnapshot();
-            return getFromSnapshot(snapshot.root, snapshot.committingTransactions, key);
-        }
     }
 
     private V getFromSnapshot(RootReference<K, VersionedValue<V>> rootRef, BitSet committingTransactions, K key) {

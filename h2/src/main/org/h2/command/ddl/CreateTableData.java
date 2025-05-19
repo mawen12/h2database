@@ -12,62 +12,62 @@ import org.h2.schema.Schema;
 import org.h2.table.Column;
 
 /**
- * The data required to create a table.
+ * 创建表所需的数据
  */
 public class CreateTableData {
 
     /**
-     * The schema.
+     * 表所在的 schema
      */
     public Schema schema;
 
     /**
-     * The table name.
+     * 创建的表名
      */
     public String tableName;
 
     /**
-     * The object id.
+     * 对象ID
      */
     public int id;
 
     /**
-     * The column list.
+     * 列列表
      */
     public ArrayList<Column> columns = new ArrayList<>();
 
     /**
-     * Whether this is a temporary table.
+     * 是否为临时表
      */
     public boolean temporary;
 
     /**
-     * Whether the table is global temporary.
+     * 是否为全局临时表
      */
     public boolean globalTemporary;
 
     /**
-     * Whether the indexes should be persisted.
+     * 索引是否应该被持久化，默认为true
      */
     public boolean persistIndexes;
 
     /**
-     * Whether the data should be persisted.
+     * 数据是否应该被持久化，默认为true
      */
     public boolean persistData;
 
     /**
-     * The session.
+     * 创建表的session
      */
     public SessionLocal session;
 
     /**
-     * The table engine to use for creating the table.
+     * 用于创建表的表引擎
      */
     public String tableEngine;
 
     /**
-     * The table engine params to use for creating the table.
+     * 用于创建表的表引擎参数
      */
     public ArrayList<String> tableEngineParams;
 

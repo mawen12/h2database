@@ -6,25 +6,23 @@
 package org.h2.mvstore;
 
 /**
- * Class RootReference is an immutable structure to represent state of the MVMap as a whole
- * (not related to a particular B-Tree node).
- * Single structure would allow for non-blocking atomic state change.
- * The most important part of it is a reference to the root node.
+ * 代表整个MVMap状态的不可变结构体（与特定的B树节点无关）
+ * 单一结构体可以实现非阻塞的原子状态改变。其中最重要的部分是对根节点的引用。
  *
  * @author <a href='mailto:andrei.tokar@gmail.com'>Andrei Tokar</a>
  */
 public final class RootReference<K,V> {
 
     /**
-     * The root page.
+     * root 页
      */
     public final Page<K,V> root;
     /**
-     * The version used for writing.
+     * 用于writing的版本
      */
     public final long version;
     /**
-     * Counter of reentrant locks.
+     * reentrant lock 的计数器
      */
     private final byte holdCount;
     /**

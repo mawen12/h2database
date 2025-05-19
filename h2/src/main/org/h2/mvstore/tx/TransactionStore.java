@@ -53,14 +53,11 @@ public class TransactionStore {
     private final MVMap<String, DataType<?>> typeRegistry;
 
     /**
-     * Undo logs.
-     * <p>
-     * If the first entry for a transaction doesn't have a logId
-     * of 0, then the transaction is partially committed (which means rollback
-     * is not possible). Log entries are written before the data is changed
-     * (write-ahead).
-     * <p>
-     * Key: opId, value: [ mapId, key, oldValue ].
+     * undo logs
+     *
+     * <p>如果事务的第一个日志条目的日志ID不为0，则表示该事务已经部分提交（这意味着无法回滚）。
+     * 日志条目会在数据更改之前写入（write-ahead）。
+     * <opId, [mapId, key, oldValue]>
      */
     @SuppressWarnings("unchecked")
     final MVMap<Long,Record<?,?>>[] undoLogs = new MVMap[MAX_OPEN_TRANSACTIONS];
@@ -375,7 +372,8 @@ public class TransactionStore {
     }
 
     /**
-     * Begin a new transaction.
+     * 开始一个新的事务
+     *
      * @param listener to be notified in case of a rollback
      * @param timeoutMillis to wait for a blocking transaction
      * @param ownerId of the owner (Session?) to be reported by getBlockerId
@@ -403,7 +401,7 @@ public class TransactionStore {
                 transactionId = txId;
                 assert !original.get(transactionId);
             }
-            if (transactionId > maxTransactionId) {
+            if (transactionId > maxTransactionId) { // 同时打开的事务不能超过默认的65535上限
                 throw DataUtils.newMVStoreException(
                         DataUtils.ERROR_TOO_MANY_OPEN_TRANSACTIONS,
                         "There are {0} open transactions",

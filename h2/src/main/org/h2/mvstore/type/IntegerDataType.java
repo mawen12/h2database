@@ -28,7 +28,7 @@ public class IntegerDataType extends BasicDataType<Integer> {
 
     @Override
     public int getMemory(Integer obj) {
-        return 4;
+        return 4; // Integer 在Java中占用4字节
     }
 
     @Override

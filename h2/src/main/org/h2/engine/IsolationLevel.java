@@ -10,36 +10,33 @@ import java.sql.Connection;
 import org.h2.message.DbException;
 
 /**
- * Level of isolation.
+ * 隔离级别
  */
 public enum IsolationLevel {
 
     /**
-     * Dirty reads, non-repeatable reads and phantom reads are allowed.
+     * 允许脏读、不可重复读、幻读（读未提交）
      */
     READ_UNCOMMITTED(Connection.TRANSACTION_READ_UNCOMMITTED, Constants.LOCK_MODE_OFF),
 
     /**
-     * Dirty reads aren't allowed; non-repeatable reads and phantom reads are
-     * allowed.
+     * 不允许脏读，允许不可重复读、幻读（读已提交）
      */
     READ_COMMITTED(Connection.TRANSACTION_READ_COMMITTED, Constants.LOCK_MODE_READ_COMMITTED),
 
     /**
-     * Dirty reads and non-repeatable reads aren't allowed; phantom reads are
-     * allowed.
+     * 不允许脏读、不可重复读；允许幻读（可重复读）
      */
     REPEATABLE_READ(Connection.TRANSACTION_REPEATABLE_READ, Constants.LOCK_MODE_TABLE),
 
     /**
-     * Dirty reads, non-repeatable reads and phantom reads are'n allowed.
+     * 不允许脏读、不可重读读、幻读（快照）
      */
     SNAPSHOT(Constants.TRANSACTION_SNAPSHOT, Constants.LOCK_MODE_TABLE),
 
     /**
-     * Dirty reads, non-repeatable reads and phantom reads are'n allowed.
-     * Concurrent and serial execution of transactions with this isolation level
-     * should have the same effect.
+     * 不允许脏读、不可重复读、缓存。（串行）
+     * 具有此隔离级别的并发和串行执行应该具有相同的效果。
      */
     SERIALIZABLE(Connection.TRANSACTION_SERIALIZABLE, Constants.LOCK_MODE_TABLE);
 

@@ -87,6 +87,9 @@ public abstract class Table extends SchemaObject {
      */
     protected CompareMode compareMode;
 
+    /**
+     * <列名, Column> 映射
+     */
     private final HashMap<String, Column> columnMap;
     /**
      * 是否持久化索引
@@ -483,22 +486,22 @@ public abstract class Table extends SchemaObject {
     }
 
     protected void setColumns(Column[] columns) {
-        if (columns.length > Constants.MAX_COLUMNS) {
+        if (columns.length > Constants.MAX_COLUMNS) { // 不能超过 65535 上限
             throw DbException.get(ErrorCode.TOO_MANY_COLUMNS_1, "" + Constants.MAX_COLUMNS);
         }
         this.columns = columns;
         if (!columnMap.isEmpty()) {
             columnMap.clear();
         }
-        for (int i = 0; i < columns.length; i++) {
+        for (int i = 0; i < columns.length; i++) { // 循环对column执行操作
             Column col = columns[i];
-            int dataType = col.getType().getValueType();
-            if (dataType == Value.UNKNOWN) {
+            int dataType = col.getType().getValueType(); // 检查column类型
+            if (dataType == Value.UNKNOWN) { // 未知类型，抛出异常
                 throw DbException.get(ErrorCode.UNKNOWN_DATA_TYPE_1, col.getTraceSQL());
             }
-            col.setTable(this, i);
+            col.setTable(this, i); // 更新column所在的表和索引
             String columnName = col.getName();
-            if (columnMap.putIfAbsent(columnName, col) != null) {
+            if (columnMap.putIfAbsent(columnName, col) != null) { // column名称重复时抛出异常
                 throw DbException.get(ErrorCode.DUPLICATE_COLUMN_NAME_1, columnName);
             }
         }

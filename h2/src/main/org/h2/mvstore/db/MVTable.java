@@ -102,7 +102,7 @@ public class MVTable extends TableBase {
     }
 
     /**
-     * 该表是否包含 CLOB 或 BLOB
+     * 该表的column的类型是否包含 CLOB 或 BLOB
      */
     private final boolean containsLargeObject;
 
@@ -190,7 +190,7 @@ public class MVTable extends TableBase {
             }
             waitingSessions.addLast(session); // 进入等待队列，这是一个FIFO队列
             try {
-                doLock1(session, lockType);
+                doLock1(session, lockType); // 加锁核心方法
             } finally {
                 session.setWaitForLock(null, null);
                 if (SysProperties.THREAD_DEADLOCK_DETECTOR) {
@@ -202,6 +202,12 @@ public class MVTable extends TableBase {
         return false;
     }
 
+    /**
+     * 加锁核心方法
+     *
+     * @param session
+     * @param lockType
+     */
     private void doLock1(SessionLocal session, int lockType) {
         traceLock(session, lockType, TraceLockEvent.TRACE_LOCK_REQUESTING_FOR, NO_EXTRA_INFO);
         // don't get the current time unless necessary
@@ -209,8 +215,8 @@ public class MVTable extends TableBase {
         boolean checkDeadlock = false;
         while (true) {
             // if I'm the next one in the queue
-            if (waitingSessions.getFirst() == session && lockExclusiveSession == null) {
-                if (doLock2(session, lockType)) {
+            if (waitingSessions.getFirst() == session && lockExclusiveSession == null) { // 当前位于等待队列的第一个，并且其他绘画还没有获取到排它锁
+                if (doLock2(session, lockType)) { // 加锁
                     return;
                 }
             }
@@ -222,7 +228,7 @@ public class MVTable extends TableBase {
                 }
             } else {
                 // check for deadlocks from now on
-                checkDeadlock = true;
+                checkDeadlock = true; // 立刻开始检查死锁
             }
             long now = System.nanoTime();
             if (max == 0L) {
@@ -249,31 +255,31 @@ public class MVTable extends TableBase {
 
     private boolean doLock2(SessionLocal session, int lockType) {
         switch (lockType) {
-        case Table.EXCLUSIVE_LOCK:
-            int size = lockSharedSessions.size();
-            if (size == 0) {
-                traceLock(session, lockType, TraceLockEvent.TRACE_LOCK_ADDED_FOR, NO_EXTRA_INFO);
-                session.registerTableAsLocked(this);
-            } else if (size == 1 && lockSharedSessions.containsKey(session)) {
-                traceLock(session, lockType, TraceLockEvent.TRACE_LOCK_ADD_UPGRADED_FOR, NO_EXTRA_INFO);
-            } else {
-                return false;
-            }
-            lockExclusiveSession = session;
-            if (SysProperties.THREAD_DEADLOCK_DETECTOR) {
-                addLockToDebugList(EXCLUSIVE_LOCKS);
-            }
-            break;
-        case Table.WRITE_LOCK:
-            if (lockSharedSessions.putIfAbsent(session, session) == null) {
-                traceLock(session, lockType, TraceLockEvent.TRACE_LOCK_OK, NO_EXTRA_INFO);
-                session.registerTableAsLocked(this);
+            case Table.EXCLUSIVE_LOCK: // 获取排它锁
+                int size = lockSharedSessions.size();
+                if (size == 0) { // 如果当前表还没有session获取共享锁
+                    traceLock(session, lockType, TraceLockEvent.TRACE_LOCK_ADDED_FOR, NO_EXTRA_INFO);
+                    session.registerTableAsLocked(this);
+                } else if (size == 1 && lockSharedSessions.containsKey(session)) { // 当前session已经获取了共享锁
+                    traceLock(session, lockType, TraceLockEvent.TRACE_LOCK_ADD_UPGRADED_FOR, NO_EXTRA_INFO);
+                } else {
+                    return false; // 已经有其他session获取了共享锁，该session无法获取排它锁
+                }
+                lockExclusiveSession = session; // 更新当前session获取锁
                 if (SysProperties.THREAD_DEADLOCK_DETECTOR) {
-                    addLockToDebugList(SHARED_LOCKS);
+                    addLockToDebugList(EXCLUSIVE_LOCKS);
+                }
+                break;
+            case Table.WRITE_LOCK: // 获取写锁
+                if (lockSharedSessions.putIfAbsent(session, session) == null) { // 首次加入共享锁
+                    traceLock(session, lockType, TraceLockEvent.TRACE_LOCK_OK, NO_EXTRA_INFO);
+                    session.registerTableAsLocked(this);
+                    if (SysProperties.THREAD_DEADLOCK_DETECTOR) {
+                        addLockToDebugList(SHARED_LOCKS);
+                    }
                 }
             }
-        }
-        return true;
+            return true;
     }
 
     private void addLockToDebugList(DebuggingThreadLocal<ArrayList<String>> locks) {
@@ -513,12 +519,18 @@ public class MVTable extends TableBase {
         return result;
     }
 
+    /**
+     * 插入单行记录
+     *
+     * @param session the session
+     * @param row the row
+     */
     @Override
     public void addRow(SessionLocal session, Row row) {
-        Transaction t = session.getTransaction();
-        long savepoint = t.setSavepoint();
+        Transaction t = session.getTransaction(); // 获取事务
+        long savepoint = t.setSavepoint(); // 获取 savepoint
         try {
-            for (Index index : indexes) {
+            for (Index index : indexes) { // 写入索引，插入主键索引、二级索引
                 index.add(session, row);
             }
         } catch (Throwable e) {

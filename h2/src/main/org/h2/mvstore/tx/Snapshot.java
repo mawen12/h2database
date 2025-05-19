@@ -10,12 +10,12 @@ import java.util.BitSet;
 import org.h2.mvstore.RootReference;
 
 /**
- * Snapshot of the map root and committing transactions.
+ * MVMap Root 和提交中的事务的snapshot
  */
 final class Snapshot<K,V> {
 
     /**
-     * The root reference.
+     * root 引用
      */
     final RootReference<K,V> root;
 

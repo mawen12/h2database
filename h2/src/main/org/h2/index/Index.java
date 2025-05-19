@@ -52,12 +52,12 @@ public abstract class Index extends SchemaObject {
     }
 
     /**
-     * 该索引的列
+     * 该索引的列，默认为表的所有column
      */
     protected IndexColumn[] indexColumns;
 
     /**
-     * 该索引使用的表中的列
+     * 该索引使用的表中的列，默认为表的所有column
      */
     protected Column[] columns;
 

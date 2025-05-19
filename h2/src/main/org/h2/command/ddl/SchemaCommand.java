@@ -9,7 +9,7 @@ import org.h2.engine.SessionLocal;
 import org.h2.schema.Schema;
 
 /**
- * This class represents a non-transaction statement that involves a schema.
+ * 该类代表涉及schema的非事务语句
  */
 public abstract class SchemaCommand extends DefineCommand {
 

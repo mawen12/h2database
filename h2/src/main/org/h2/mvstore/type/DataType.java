@@ -37,7 +37,7 @@ public interface DataType<T> extends Comparator<T> {
     int binarySearch(T key, Object storage, int size, int initialGuess);
 
     /**
-     * Calculates the amount of used memory in bytes.
+     * 计算已使用的内存量（以字节为单位）
      *
      * @param obj the object
      * @return the used memory

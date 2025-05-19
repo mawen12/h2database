@@ -263,7 +263,7 @@ public class Constants {
     public static final int MAX_IDENTIFIER_LENGTH = 256;
 
     /**
-     * The maximum number of columns in a table, select statement or row value.
+     * 一张表/SELECT语句/行值中所允许的最大列数量，
      */
     public static final int MAX_COLUMNS = 16_384;
 

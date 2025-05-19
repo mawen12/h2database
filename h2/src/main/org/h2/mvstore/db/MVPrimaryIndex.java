@@ -35,7 +35,9 @@ import org.h2.value.ValueLob;
 import org.h2.value.VersionedValue;
 
 /**
- * 存储在 MVStore 中的表
+ * 存储在 MVStore 中的主键索引
+ *
+ * <p>主键索引的类型强制为Long, 值为SearchRow
  */
 public final class MVPrimaryIndex extends MVIndex<Long, SearchRow> {
 
@@ -53,13 +55,13 @@ public final class MVPrimaryIndex extends MVIndex<Long, SearchRow> {
         this.mvTable = table;
         RowDataType valueType = table.getRowFactory().getRowDataType();
         mapName = "table." + getId();
-        Transaction t = mvTable.getTransactionBegin();
+        Transaction t = mvTable.getTransactionBegin(); // 开启事务
         dataMap = t.openMap(mapName, LongDataType.INSTANCE, valueType);
         dataMap.map.setVolatile(!table.isPersistData() || !indexType.isPersistent());
         if (!db.isStarting()) {
             dataMap.clear();
         }
-        t.commit();
+        t.commit(); // 提交事务
         Long k = dataMap.map.lastKey();    // include uncommitted keys as well
         lastKey.set(k == null ? 0 : k);
     }
@@ -93,9 +95,9 @@ public final class MVPrimaryIndex extends MVIndex<Long, SearchRow> {
             if (row.getKey() == 0) {
                 row.setKey(lastKey.incrementAndGet());
             }
-        } else {
-            long c = row.getValue(mainIndexColumn).getLong();
-            row.setKey(c);
+        } else { // 该表存在primary key
+            long c = row.getValue(mainIndexColumn).getLong(); // 获取 primary （主键） 的值
+            row.setKey(c); // 将primary key 的值设置为key
         }
 
         if (mvTable.getContainsLargeObject()) {

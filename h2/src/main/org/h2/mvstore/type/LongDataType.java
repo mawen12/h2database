@@ -10,7 +10,7 @@ import org.h2.mvstore.DataUtils;
 import org.h2.mvstore.WriteBuffer;
 
 /**
- * Class LongDataType.
+ * 代表Long的数据类型
  * <UL>
  * <LI> 8/21/17 6:52 PM initial creation
  * </UL>
@@ -27,7 +27,7 @@ public class LongDataType extends BasicDataType<Long> {
 
     @Override
     public int getMemory(Long obj) {
-        return 8;
+        return 8; // Long 在Java中占用8字节
     }
 
     @Override
